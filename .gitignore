@@ -1,0 +1,69 @@
+# --- OS ---
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# --- Editors / IDEs ---
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# --- MATLAB ---
+*.asv
+*.m~
+*.mlx.bak
+slprj/
+*.slxc
+*.autosave
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+.ipynb_checkpoints/
+
+# --- R ---
+.Rhistory
+.RData
+.Rproj.user/
+*.Rproj
+
+# --- Large / sensitive data (keep examples/ only) ---
+data/**
+!data/examples/
+!data/examples/**
+!data/README.md
+
+# Raw imaging / sequencing dumps
+*.tif
+*.tiff
+*.nd2
+*.czi
+*.lsm
+*.ims
+*.h5ad
+*.rds
+*.h5
+*.bam
+*.fastq
+*.fq.gz
+*.mtx
+*.npz
+
+# Figures rendered locally (source scripts stay tracked)
+**/output/
+**/results/
+**/figures_out/
+*.pdf
+!docs/**/*.pdf
+
+# Secrets
+*.pem
+credentials*
+secrets*
+.env.*
