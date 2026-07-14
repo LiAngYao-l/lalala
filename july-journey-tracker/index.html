@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>July Journey Tracker · 身弱壬水日主</title>
+  <style>
+    :root {
+      --ink: #0f2a3a;
+      --muted: #4d6b7c;
+      --water: #2f7ea8;
+      --water-deep: #184d6b;
+      --water-soft: #d9eef8;
+      --foam: #f4fbff;
+      --sand: #f7f1e6;
+      --leaf: #2f7a57;
+      --coral: #c45a4a;
+      --gold: #b8893b;
+      --line: rgba(24, 77, 107, 0.14);
+      --shadow: 0 18px 50px rgba(15, 42, 58, 0.10);
+      --radius: 22px;
+      --mono: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+      --sans: "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--sans);
+      background:
+        radial-gradient(1200px 500px at 10% -10%, #cfeaf8 0%, transparent 55%),
+        radial-gradient(900px 420px at 100% 0%, #e8f6ef 0%, transparent 50%),
+        linear-gradient(180deg, #eef7fb 0%, #f7fafc 40%, #f3f6f8 100%);
+      min-height: 100vh;
+    }
+
+    .wrap {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 72px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.4fr 0.9fr;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px 24px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--water);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      line-height: 1.2;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 1.15rem;
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+    }
+
+    p, li {
+      line-height: 1.65;
+      color: var(--ink);
+    }
+
+    .lede {
+      color: var(--muted);
+      margin: 0 0 16px;
+      font-size: 1.02rem;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: var(--water-soft);
+      color: var(--water-deep);
+      font-size: 13px;
+      font-weight: 600;
+      border: 1px solid rgba(47, 126, 168, 0.18);
+    }
+
+    .pill.done { background: #e5f6ec; color: var(--leaf); }
+    .pill.now { background: #fff4df; color: #8a5a12; }
+    .pill.soft { background: var(--foam); color: var(--muted); }
+
+    .status-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .status-item {
+      padding: 14px 14px 12px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, #f8fcff, #eef7fb);
+      border: 1px solid var(--line);
+    }
+
+    .status-item strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .status-item span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .quote {
+      margin: 0;
+      padding: 16px 18px;
+      border-left: 4px solid var(--water);
+      background: linear-gradient(90deg, rgba(217,238,248,0.7), transparent);
+      border-radius: 0 14px 14px 0;
+      color: var(--water-deep);
+      font-size: 1.02rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .section {
+      margin-top: 18px;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .tab {
+      border: 1px solid var(--line);
+      background: white;
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 8px 14px;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 600;
+    }
+
+    .tab.active {
+      background: var(--water-deep);
+      color: white;
+      border-color: var(--water-deep);
+    }
+
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    .guidance-block {
+      margin-bottom: 14px;
+      padding: 16px;
+      border-radius: 16px;
+      background: var(--foam);
+      border: 1px solid var(--line);
+    }
+
+    .guidance-block p:last-child { margin-bottom: 0; }
+
+    .checklist {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 10px;
+    }
+
+    .checklist li {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: white;
+    }
+
+    .checklist li.checked {
+      background: #eef8f2;
+      border-color: rgba(47, 122, 87, 0.25);
+    }
+
+    .checklist input {
+      width: 18px;
+      height: 18px;
+      margin-top: 3px;
+      accent-color: var(--water);
+    }
+
+    .habit-board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .habit-card {
+      padding: 16px;
+      border-radius: 18px;
+      background: linear-gradient(160deg, #ffffff, #eef7fb);
+      border: 1px solid var(--line);
+      min-height: 140px;
+    }
+
+    .habit-card .time {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--water);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .habit-card h3 { margin-bottom: 6px; }
+    .habit-card p {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .habit-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+
+    .progress-bar {
+      height: 10px;
+      border-radius: 999px;
+      background: #e5eef4;
+      overflow: hidden;
+      margin: 10px 0 6px;
+    }
+
+    .progress-bar > span {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #4ba3c7, #2f7a57);
+      transition: width 0.25s ease;
+    }
+
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    textarea, input[type="text"], input[type="date"] {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font: inherit;
+      background: white;
+      color: var(--ink);
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    button.btn {
+      border: none;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      background: var(--water-deep);
+      color: white;
+    }
+
+    button.btn.secondary {
+      background: white;
+      color: var(--water-deep);
+      border: 1px solid var(--line);
+    }
+
+    button.btn.danger {
+      background: #f8e8e5;
+      color: var(--coral);
+    }
+
+    .timeline {
+      display: grid;
+      gap: 10px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 18px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .dot {
+      width: 14px;
+      height: 14px;
+      margin-top: 6px;
+      border-radius: 50%;
+      background: var(--water);
+      box-shadow: 0 0 0 4px rgba(47,126,168,0.15);
+    }
+
+    .dot.done { background: var(--leaf); box-shadow: 0 0 0 4px rgba(47,122,87,0.15); }
+    .dot.now { background: var(--gold); box-shadow: 0 0 0 4px rgba(184,137,59,0.18); }
+
+    .day-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .day-nav .date-label {
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+
+    .phase-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .phase {
+      padding: 14px;
+      border-radius: 16px;
+      background: white;
+      border: 1px solid var(--line);
+    }
+
+    .phase .label {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--water);
+      margin-bottom: 6px;
+    }
+
+    .footer-note {
+      margin-top: 22px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 900px) {
+      .hero, .grid-2, .habit-board, .grid-3, .phase-cards {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="card">
+        <div class="eyebrow">身弱壬水日主 · 东边樂方流月</div>
+        <h1>July Journey Tracker</h1>
+        <p class="lede">
+          表达出彩，责任成形。先稳住余量，再把心里的水流成清楚路径的蓄势之月
+          （2026.7.7 – 2026.8.6）。
+        </p>
+        <blockquote class="quote">
+          水有余量，方能长流，愿你说出的每一句话，都从安稳的源头流向丰盛的去处。
+        </blockquote>
+        <div class="pill-row">
+          <span class="pill done">Bay Area travel ended</span>
+          <span class="pill done">McKinsey in-person done</span>
+          <span class="pill now">Back in Ann Arbor</span>
+          <span class="pill soft">Sleep 11:00 · Wake 7:30 · Morning run</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="eyebrow">Current Base</div>
+        <h2>📍 Ann Arbor</h2>
+        <div class="status-grid">
+          <div class="status-item">
+            <strong>Travel closed</strong>
+            <span>Bay Area 行程已结束，回到稳定日常。</span>
+          </div>
+          <div class="status-item">
+            <strong>McKinsey in-person</strong>
+            <span>线下 event 已完成，接下来进入整理反馈与轻量推进。</span>
+          </div>
+          <div class="status-item">
+            <strong>This month’s core</strong>
+            <span>想法 → 记录 → 留缓冲 → 再给答案。</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card section">
+      <div class="eyebrow">Journey Timeline</div>
+      <h2>七月行迹与状态切换</h2>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="dot done"></div>
+          <div>
+            <strong>Bay Area travel</strong>
+            <div class="soft-text" style="color:var(--muted)">行程收束，信息不急着再扩，先把力气收回来。</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="dot done"></div>
+          <div>
+            <strong>McKinsey in-person event</strong>
+            <div style="color:var(--muted)">表达与临场已完成。把收获落成可复用的笔记与下一步名单。</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="dot now"></div>
+          <div>
+            <strong>Ann Arbor home base</strong>
+            <div style="color:var(--muted)">重建节奏：11pm 入睡、7:30 起床、晨跑；白天留二分之一空白。</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid-2">
+      <div class="card">
+        <div class="eyebrow">Daily Rhythm</div>
+        <div class="day-nav">
+          <button class="btn secondary" id="prevDay" type="button">← Prev</button>
+          <div class="date-label" id="dateLabel">Today</div>
+          <button class="btn secondary" id="nextDay" type="button">Next →</button>
+        </div>
+        <div class="habit-board">
+          <div class="habit-card">
+            <div class="time">07:30</div>
+            <h3>Wake up</h3>
+            <p>起床，先给身体水分与日光，再碰信息。</p>
+            <label class="habit-toggle">
+              <input type="checkbox" data-habit="wake" />
+              Done
+            </label>
+          </div>
+          <div class="habit-card">
+            <div class="time">Morning</div>
+            <h3>Morning run</h3>
+            <p>慢跑 / 慢走 / 公园散步，让想法自己排好队。</p>
+            <label class="habit-toggle">
+              <input type="checkbox" data-habit="run" />
+              Done
+            </label>
+          </div>
+          <div class="habit-card">
+            <div class="time">23:00</div>
+            <h3>Sleep</h3>
+            <p>11pm 入睡。床上少刷信息，让大脑知道一天收工。</p>
+            <label class="habit-toggle">
+              <input type="checkbox" data-habit="sleep" />
+              Done
+            </label>
+          </div>
+        </div>
+        <div class="progress-bar"><span id="habitFill"></span></div>
+        <div class="meta">
+          <span id="habitMeta">0 / 3 habits</span>
+          <span id="streakMeta">Streak: 0</span>
+        </div>
+        <div class="actions">
+          <button class="btn secondary" id="todayBtn" type="button">Jump to today</button>
+          <button class="btn secondary" id="exportBtn" type="button">Export JSON</button>
+          <button class="btn danger" id="resetDayBtn" type="button">Reset day</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="eyebrow">Capture Inlet · 固定记录入口</div>
+        <h2>先留缓冲，再给答案</h2>
+        <p style="color:var(--muted); margin-top:0;">
+          把有价值的念头整理成步骤清晰的安排。沟通与接任务时，话说完整，并预留二分之一空白。
+        </p>
+        <label for="noteDate" style="display:block; margin-bottom:6px; font-weight:600;">Date</label>
+        <input type="date" id="noteDate" />
+        <div style="height:10px"></div>
+        <label for="ideaInbox" style="display:block; margin-bottom:6px; font-weight:600;">Today’s notes / next steps</label>
+        <textarea id="ideaInbox" placeholder="想法 · 具体步骤 · 预计时间 · 谁配合 · 留出缓冲…"></textarea>
+        <div class="actions">
+          <button class="btn" id="saveNoteBtn" type="button">Save note</button>
+          <button class="btn secondary" id="clearNoteBtn" type="button">Clear editor</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card section">
+      <div class="eyebrow">樂方流月批文</div>
+      <h2>月度运势集成 · 可用于每日对照</h2>
+      <div class="tabs" role="tablist">
+        <button class="tab active" data-tab="overview" type="button">总论</button>
+        <button class="tab" data-tab="love" type="button">情感</button>
+        <button class="tab" data-tab="career" type="button">事业</button>
+        <button class="tab" data-tab="money" type="button">财务</button>
+        <button class="tab" data-tab="health" type="button">人际与健康</button>
+      </div>
+
+      <div class="panel active" id="panel-overview">
+        <div class="guidance-block">
+          <h3>想表达，也要给自己留够力气</h3>
+          <p>这个月，大自然在夏日深处展露出温和的生机，你的心思与灵感也会变得格外活跃。你可能会更想说出自己的判断，提出新方案，把脑子里盘旋很久的想法付诸实践。很多过去压在心里的想法，会在这段时间慢慢浮上来。这是一件好事，你需要表达，也需要让周围看到你的想法。</p>
+          <p>但本月最核心的功课是<strong>把想法落实为具体的记录，先留缓冲再给答案</strong>。任务与日常安排会变得很具体，你不能只停留在构思阶段，请给自己准备一个固定的记录入口，将有价值的念头整理成步骤清晰的安排。在与他人沟通或接下任务时，请试着把话说得更完整，给出具体的步骤与预计时间，为自己留出二分之一的空白，不仅能少点被时间追着走的压力，也会帮你把生活接得更稳。</p>
+        </div>
+        <ul class="checklist" id="overviewChecks">
+          <li><input type="checkbox" data-check="fix-inlet" /><div>准备 / 使用固定记录入口（本页右侧即可）</div></li>
+          <li><input type="checkbox" data-check="buffer-half" /><div>安排任务时，主动留出约 1/2 空白缓冲</div></li>
+          <li><input type="checkbox" data-check="complete-talk" /><div>沟通时说完整：步骤 + 预计时间 + 需要谁配合</div></li>
+          <li><input type="checkbox" data-check="express-with-energy" /><div>想表达，也先确认自己力气还够</div></li>
+        </ul>
+      </div>
+
+      <div class="panel" id="panel-love">
+        <div class="guidance-block">
+          <h3>把需要说具体，把节奏放柔和</h3>
+          <p>这个月的感情，会更需要温和的沟通。单身者容易被聪明、有话题且表达能力好的人吸引，缘分很容易从聊得来开始。但相处时也要看对方是否愿意进入真实生活，多看一个人能不能稳定安排时间、真诚回应，让关系慢慢经过普通日子的检验。</p>
+          <p>有伴者，适合把没有说清的事拿出来谈：时间安排、开销或彼此最近的节奏。沟通时可以先讲自己的真实需要，再请对方共同参与。适合一起做一件能让关系更清楚的事，比如安排一次出行计划，定一个固定的相处时间，感情会因为清晰而变得轻松。</p>
+        </div>
+        <ul class="checklist" id="loveChecks">
+          <li><input type="checkbox" data-check="gentle-talk" /><div>本周至少一次温和且具体的沟通</div></li>
+          <li><input type="checkbox" data-check="real-life-test" /><div>看对方是否能进入真实生活与稳定安排</div></li>
+          <li><input type="checkbox" data-check="clear-together" /><div>一起做一件让关系更清楚的事（出行 / 固定相处时间）</div></li>
+        </ul>
+      </div>
+
+      <div class="panel" id="panel-career">
+        <div class="guidance-block">
+          <h3>先做轻量版本，再进入正式推进</h3>
+          <p>这个月在事务处理上的关键是轻量启动。你会有不少表达机会，适合做内容整理、方案设计、汇报沟通或流程优化，将复杂问题整理成可执行的方向。</p>
+          <div class="phase-cards">
+            <div class="phase">
+              <div class="label">上旬</div>
+              <strong>收集材料 · 搭建框架</strong>
+              <p style="margin:8px 0 0; color:var(--muted);">新需求先别说满，先了解背景与边界。</p>
+            </div>
+            <div class="phase">
+              <div class="label">中旬</div>
+              <strong>正式输出 · 提案推进</strong>
+              <p style="margin:8px 0 0; color:var(--muted);">观点连交付：谁配合、何时完成。</p>
+            </div>
+            <div class="phase">
+              <div class="label">下旬</div>
+              <strong>确认结果 · 收尾整理</strong>
+              <p style="margin:8px 0 0; color:var(--muted);">把内容与反馈统一成可反复参考的成果。</p>
+            </div>
+          </div>
+        </div>
+        <ul class="checklist" id="careerChecks">
+          <li><input type="checkbox" data-check="mck-debrief" /><div>整理 McKinsey in-person 的收获 / 反馈 / 后续名单</div></li>
+          <li><input type="checkbox" data-check="lightweight" /><div>新项目先做轻量版本，再正式推进</div></li>
+          <li><input type="checkbox" data-check="framework-first" /><div>上旬：材料收集与框架清楚后再承诺</div></li>
+          <li><input type="checkbox" data-check="delivery-link" /><div>中旬：观点与交付、责任人、时间节点连接起来</div></li>
+          <li><input type="checkbox" data-check="close-loop" /><div>下旬：结果确认与可复用归档</div></li>
+        </ul>
+      </div>
+
+      <div class="panel" id="panel-money">
+        <div class="guidance-block">
+          <h3>先守住现金流，再打开新收入</h3>
+          <p>收益容易跟方案、内容、项目或沟通有关。款项可能来自项目合作、专业服务或资源对接，钱不会只靠等待而来，需要你清晰地表达并推进出来。适合整理收费方式：内容、交付标准与付款时间用文字固定下来，提前说明节点。</p>
+          <p>支出方面，容易在学习、设备或资料上产生费用。适度投入可以帮助你把想法做出来，但请避免因为一时灵感就频繁购买。可以提前定好一个项目预算，列清最多花多少钱、花在哪些地方。</p>
+        </div>
+        <ul class="checklist" id="moneyChecks">
+          <li><input type="checkbox" data-check="pricing-write" /><div>用文字固定收费方式 / 交付标准 / 付款节点</div></li>
+          <li><input type="checkbox" data-check="cashflow-first" /><div>先守现金流，再考虑扩展收入入口</div></li>
+          <li><input type="checkbox" data-check="project-budget" /><div>为当前项目设定支出上限与用途清单</div></li>
+        </ul>
+      </div>
+
+      <div class="panel" id="panel-health">
+        <div class="guidance-block">
+          <h3>少被信息冲走，多把自己收回来</h3>
+          <p>人际上，适合留有边界的交流。别人来找你拿主意时可以表达，但请设置清晰边界；重要讨论提前留好记录。不必参加太多无限延伸的社交，多留给自己安静空间。</p>
+          <p>健康重点：照顾大脑、睡眠和水分平衡。可能因为想得多、说得多而出现睡前兴奋或腿脚酸胀。白天固定喝温水，久坐后起身活动。晚上少在床上继续刷信息。饮食少过咸过辣，多清淡易消化。运动适合游泳、慢走或公园散步。</p>
+        </div>
+        <ul class="checklist" id="healthChecks">
+          <li><input type="checkbox" data-check="warm-water" /><div>白天固定喝温水</div></li>
+          <li><input type="checkbox" data-check="no-bed-scroll" /><div>晚上不上床刷信息</div></li>
+          <li><input type="checkbox" data-check="boundary-talk" /><div>重要讨论有边界、有记录</div></li>
+          <li><input type="checkbox" data-check="move-body" /><div>久坐后起身；游泳 / 慢走 / 散步一次</div></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="card section">
+      <div class="eyebrow">Ann Arbor Reset Checklist</div>
+      <h2>回来之后先稳住的几件事</h2>
+      <ul class="checklist" id="resetChecks">
+        <li><input type="checkbox" data-check="unpack-settle" /><div>安顿行李与生活空间，先把可恢复的余量建回来</div></li>
+        <li><input type="checkbox" data-check="schedule-buffer" /><div>重建本周日程：任务只排一半密度</div></li>
+        <li><input type="checkbox" data-check="sleep-alarm" /><div>设置 23:00 收工提醒 + 07:30 起床闹钟</div></li>
+        <li><input type="checkbox" data-check="run-route" /><div>固定一条 Ann Arbor 晨跑 / 散步路线</div></li>
+        <li><input type="checkbox" data-check="mck-notes" /><div>把 McKinsey event 的 key people / insights 写成一页</div></li>
+        <li><input type="checkbox" data-check="idea-pipeline" /><div>把回城后浮上来的想法先记进记录入口，不急着全答应</div></li>
+      </ul>
+    </section>
+
+    <p class="footer-note">
+      本地自动保存于浏览器 localStorage · July Journey Tracker · 乐方流月批文已集成
+    </p>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "july-journey-tracker-v1";
+    const HABITS = ["wake", "run", "sleep"];
+
+    const state = loadState();
+    let currentDay = state.selectedDay || todayKey();
+
+    function todayKey() {
+      const d = new Date();
+      return formatDate(d);
+    }
+
+    function formatDate(d) {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${y}-${m}-${day}`;
+    }
+
+    function parseDate(key) {
+      const [y, m, d] = key.split("-").map(Number);
+      return new Date(y, m - 1, d);
+    }
+
+    function shiftDay(key, delta) {
+      const d = parseDate(key);
+      d.setDate(d.getDate() + delta);
+      return formatDate(d);
+    }
+
+    function loadState() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { days: {}, checks: {}, notes: {}, selectedDay: null };
+      } catch {
+        return { days: {}, checks: {}, notes: {}, selectedDay: null };
+      }
+    }
+
+    function saveState() {
+      state.selectedDay = currentDay;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function ensureDay(key) {
+      if (!state.days[key]) {
+        state.days[key] = { wake: false, run: false, sleep: false };
+      }
+      return state.days[key];
+    }
+
+    function renderHabits() {
+      const day = ensureDay(currentDay);
+      document.getElementById("dateLabel").textContent =
+        currentDay === todayKey() ? `Today · ${currentDay}` : currentDay;
+      document.getElementById("noteDate").value = currentDay;
+
+      document.querySelectorAll("[data-habit]").forEach((input) => {
+        const key = input.getAttribute("data-habit");
+        input.checked = !!day[key];
+        input.closest(".habit-card").style.outline = input.checked
+          ? "2px solid rgba(47,122,87,0.35)"
+          : "none";
+      });
+
+      const done = HABITS.filter((h) => day[h]).length;
+      document.getElementById("habitFill").style.width = `${(done / HABITS.length) * 100}%`;
+      document.getElementById("habitMeta").textContent = `${done} / ${HABITS.length} habits`;
+      document.getElementById("streakMeta").textContent = `Streak: ${calcStreak()}`;
+
+      const note = state.notes[currentDay] || "";
+      document.getElementById("ideaInbox").value = note;
+    }
+
+    function calcStreak() {
+      let streak = 0;
+      let cursor = todayKey();
+      while (true) {
+        const day = state.days[cursor];
+        const complete = day && HABITS.every((h) => day[h]);
+        if (!complete) break;
+        streak += 1;
+        cursor = shiftDay(cursor, -1);
+      }
+      return streak;
+    }
+
+    function renderChecks() {
+      document.querySelectorAll("[data-check]").forEach((input) => {
+        const key = input.getAttribute("data-check");
+        input.checked = !!state.checks[key];
+        input.closest("li").classList.toggle("checked", input.checked);
+      });
+    }
+
+    document.querySelectorAll("[data-habit]").forEach((input) => {
+      input.addEventListener("change", () => {
+        const day = ensureDay(currentDay);
+        day[input.getAttribute("data-habit")] = input.checked;
+        saveState();
+        renderHabits();
+      });
+    });
+
+    document.querySelectorAll("[data-check]").forEach((input) => {
+      input.addEventListener("change", () => {
+        state.checks[input.getAttribute("data-check")] = input.checked;
+        saveState();
+        renderChecks();
+      });
+    });
+
+    document.getElementById("prevDay").addEventListener("click", () => {
+      currentDay = shiftDay(currentDay, -1);
+      saveState();
+      renderHabits();
+    });
+
+    document.getElementById("nextDay").addEventListener("click", () => {
+      currentDay = shiftDay(currentDay, 1);
+      saveState();
+      renderHabits();
+    });
+
+    document.getElementById("todayBtn").addEventListener("click", () => {
+      currentDay = todayKey();
+      saveState();
+      renderHabits();
+    });
+
+    document.getElementById("noteDate").addEventListener("change", (e) => {
+      currentDay = e.target.value || todayKey();
+      saveState();
+      renderHabits();
+    });
+
+    document.getElementById("saveNoteBtn").addEventListener("click", () => {
+      state.notes[currentDay] = document.getElementById("ideaInbox").value;
+      saveState();
+      document.getElementById("saveNoteBtn").textContent = "Saved ✓";
+      setTimeout(() => {
+        document.getElementById("saveNoteBtn").textContent = "Save note";
+      }, 1200);
+    });
+
+    document.getElementById("clearNoteBtn").addEventListener("click", () => {
+      document.getElementById("ideaInbox").value = "";
+    });
+
+    document.getElementById("resetDayBtn").addEventListener("click", () => {
+      state.days[currentDay] = { wake: false, run: false, sleep: false };
+      saveState();
+      renderHabits();
+    });
+
+    document.getElementById("exportBtn").addEventListener("click", () => {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `july-journey-tracker-${todayKey()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    document.querySelectorAll(".tab").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));
+        document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
+        tab.classList.add("active");
+        document.getElementById(`panel-${tab.dataset.tab}`).classList.add("active");
+      });
+    });
+
+    // Seed a return-home status note once, without overwriting user content.
+    if (!state.metaSeeded) {
+      const seedDay = todayKey();
+      if (!state.notes[seedDay]) {
+        state.notes[seedDay] = [
+          "Status update:",
+          "- Ended Bay Area travel",
+          "- Finished McKinsey in-person event",
+          "- Back in Ann Arbor",
+          "",
+          "Rhythm reset:",
+          "- Sleep by 11:00pm",
+          "- Wake at 7:30am",
+          "- Morning run",
+          "",
+          "本月功课：先稳住余量 → 记录想法 → 留 1/2 缓冲 → 再清楚表达与推进。"
+        ].join("\n");
+      }
+      state.metaSeeded = true;
+      saveState();
+    }
+
+    renderHabits();
+    renderChecks();
+  </script>
+</body>
+</html>
