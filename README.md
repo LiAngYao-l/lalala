@@ -39,7 +39,7 @@ Cursor Cloud Agent 在云端虚拟机里跑，直接连你的 **GitHub 个人仓
 | 统计 + 作图（boxplot 等） | `stats_figures/` |
 | qPCR 等分子分析 | `molecular/qpcr/` |
 | 某个具体实验/论文项目 | `projects/<项目名>/` |
-| 给 Cursor Agent 复用的技能说明 | `skills/` |
+| 给 Cursor Agent 复用的 Skills（自动加载） | `.cursor/skills/`（说明见 `skills/`、`docs/skills.md`） |
 
 ---
 
@@ -85,6 +85,7 @@ cd lalala
 - [docs/cursor-cloud.md](docs/cursor-cloud.md) — Cursor Cloud 指南
 - [docs/migration.md](docs/migration.md) — 从 HeemskerkLab 迁移
 - [docs/project-management.md](docs/project-management.md) — 项目管理约定
+- [docs/skills.md](docs/skills.md) — 一起创建/使用 Skills（跨设备）
 
 ---
 
