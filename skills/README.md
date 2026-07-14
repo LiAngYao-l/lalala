@@ -19,7 +19,7 @@ Cursor 只会自动发现：
 | `imaging-batch` | `/imaging-batch` 或描述成像分析 | overview → seg → quant / micropattern |
 | `video-tracking` | `/video-tracking` | 视频与细胞追踪 |
 | `scrnaseq-integrate` | `/scrnaseq-integrate` | scRNA-seq 整合与下游分析 |
-| `figure-boxplot` | `/figure-boxplot` | 统计检验 + box/violin 图 |
+| `figure-boxplot` | `/figure-boxplot` | MATLAB 黑框+jitter（`makeCombinedFigures.m` 风格） |
 | `qpcr-analysis` | `/qpcr-analysis` | qPCR ΔCt / ΔΔCt |
 | `new-analysis-project` | `/new-analysis-project` | 新建 `projects/<name>/` |
 
