@@ -531,7 +531,6 @@
         </div>
         <div class="actions">
           <button class="btn secondary" id="todayBtn" type="button">Jump to today</button>
-          <button class="btn secondary" id="exportBtn" type="button">Export JSON</button>
           <button class="btn danger" id="resetDayBtn" type="button">Reset day</button>
         </div>
       </div>
@@ -552,6 +551,38 @@
           <button class="btn secondary" id="clearNoteBtn" type="button">Clear editor</button>
         </div>
       </div>
+    </section>
+
+    <section class="card section" id="syncCard">
+      <div class="eyebrow">Multi-computer Sync</div>
+      <h2>Home ↔ Work · keep one shared data file</h2>
+      <p style="color:var(--muted); margin-top:0;">
+        Browser <code>localStorage</code> stays on one computer. To continue on another Mac,
+        keep your progress in shared <strong>data.json</strong> (iCloud / Dropbox / Git).
+      </p>
+      <div class="grid-3" style="margin-top:12px;">
+        <div class="status-item">
+          <strong>1. Put this folder in a synced place</strong>
+          <span>iCloud Drive, Dropbox, or a Git repo both Macs can open.</span>
+        </div>
+        <div class="status-item">
+          <strong>2. At home: Save Shared Data</strong>
+          <span>Downloads/overwrites <code>data.json</code> in that same folder.</span>
+        </div>
+        <div class="status-item">
+          <strong>3. At work: Load Shared Data</strong>
+          <span>Open <code>data.json</code> once, then keep updating.</span>
+        </div>
+      </div>
+      <div class="actions" style="margin-top:16px;">
+        <button class="btn" id="saveSharedBtn" type="button">Save Shared Data (data.json)</button>
+        <button class="btn secondary" id="loadSharedBtn" type="button">Load Shared Data</button>
+        <button class="btn secondary" id="connectFileBtn" type="button">Connect data.json (auto-save)</button>
+        <input id="importFile" type="file" accept="application/json,.json" hidden />
+      </div>
+      <p id="syncStatus" style="margin:12px 0 0; color:var(--muted); font-size:0.92rem;">
+        Sync status: local browser cache only
+      </p>
     </section>
 
     <section class="card section">
@@ -665,7 +696,7 @@
     </section>
 
     <p class="footer-note">
-      本地自动保存于浏览器 localStorage · July Journey Tracker · 乐方流月批文已集成
+      Local cache + shared <code>data.json</code> sync · July Journey Tracker · 乐方流月批文已集成
     </p>
   </div>
 
@@ -673,12 +704,24 @@
     const STORAGE_KEY = "july-journey-tracker-v1";
     const HABITS = ["wake", "run", "sleep"];
 
-    const state = loadState();
-    let currentDay = state.selectedDay || todayKey();
+    let state = emptyState();
+    let currentDay = todayKey();
+    let fileHandle = null;
+    let syncMode = "local";
+
+    function emptyState() {
+      return {
+        days: {},
+        checks: {},
+        notes: {},
+        selectedDay: null,
+        metaSeeded: false,
+        updatedAt: null
+      };
+    }
 
     function todayKey() {
-      const d = new Date();
-      return formatDate(d);
+      return formatDate(new Date());
     }
 
     function formatDate(d) {
@@ -699,17 +742,79 @@
       return formatDate(d);
     }
 
-    function loadState() {
+    function normalizeState(raw) {
+      const base = emptyState();
+      if (!raw || typeof raw !== "object") return base;
+      return {
+        ...base,
+        ...raw,
+        days: raw.days || {},
+        checks: raw.checks || {},
+        notes: raw.notes || {}
+      };
+    }
+
+    function readLocalCache() {
       try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { days: {}, checks: {}, notes: {}, selectedDay: null };
+        return normalizeState(JSON.parse(localStorage.getItem(STORAGE_KEY)));
       } catch {
-        return { days: {}, checks: {}, notes: {}, selectedDay: null };
+        return emptyState();
       }
     }
 
-    function saveState() {
-      state.selectedDay = currentDay;
+    function writeLocalCache() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function setSyncStatus(text) {
+      const el = document.getElementById("syncStatus");
+      if (el) el.textContent = text;
+    }
+
+    async function writeConnectedFile() {
+      if (!fileHandle) return false;
+      const writable = await fileHandle.createWritable();
+      await writable.write(JSON.stringify(state, null, 2));
+      await writable.close();
+      return true;
+    }
+
+    function downloadDataJson() {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "data.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    async function saveState() {
+      state.selectedDay = currentDay;
+      state.updatedAt = new Date().toISOString();
+      writeLocalCache();
+      if (fileHandle) {
+        try {
+          await writeConnectedFile();
+          syncMode = "connected";
+          setSyncStatus(`Sync status: auto-saving to connected data.json · updated ${state.updatedAt}`);
+        } catch (err) {
+          setSyncStatus(`Sync status: connected file write failed (${err.message}). Use Save Shared Data.`);
+        }
+      } else if (syncMode === "shared-ready") {
+        setSyncStatus(`Sync status: saved locally · click Save Shared Data before switching computers · ${state.updatedAt}`);
+      } else {
+        setSyncStatus(`Sync status: saved in this browser only · ${state.updatedAt}`);
+      }
+    }
+
+    function applyState(next, sourceLabel) {
+      state = normalizeState(next);
+      currentDay = state.selectedDay || todayKey();
+      writeLocalCache();
+      renderHabits();
+      renderChecks();
+      setSyncStatus(`Sync status: loaded from ${sourceLabel}${state.updatedAt ? " · " + state.updatedAt : ""}`);
     }
 
     function ensureDay(key) {
@@ -737,9 +842,7 @@
       document.getElementById("habitFill").style.width = `${(done / HABITS.length) * 100}%`;
       document.getElementById("habitMeta").textContent = `${done} / ${HABITS.length} habits`;
       document.getElementById("streakMeta").textContent = `Streak: ${calcStreak()}`;
-
-      const note = state.notes[currentDay] || "";
-      document.getElementById("ideaInbox").value = note;
+      document.getElementById("ideaInbox").value = state.notes[currentDay] || "";
     }
 
     function calcStreak() {
@@ -763,87 +866,8 @@
       });
     }
 
-    document.querySelectorAll("[data-habit]").forEach((input) => {
-      input.addEventListener("change", () => {
-        const day = ensureDay(currentDay);
-        day[input.getAttribute("data-habit")] = input.checked;
-        saveState();
-        renderHabits();
-      });
-    });
-
-    document.querySelectorAll("[data-check]").forEach((input) => {
-      input.addEventListener("change", () => {
-        state.checks[input.getAttribute("data-check")] = input.checked;
-        saveState();
-        renderChecks();
-      });
-    });
-
-    document.getElementById("prevDay").addEventListener("click", () => {
-      currentDay = shiftDay(currentDay, -1);
-      saveState();
-      renderHabits();
-    });
-
-    document.getElementById("nextDay").addEventListener("click", () => {
-      currentDay = shiftDay(currentDay, 1);
-      saveState();
-      renderHabits();
-    });
-
-    document.getElementById("todayBtn").addEventListener("click", () => {
-      currentDay = todayKey();
-      saveState();
-      renderHabits();
-    });
-
-    document.getElementById("noteDate").addEventListener("change", (e) => {
-      currentDay = e.target.value || todayKey();
-      saveState();
-      renderHabits();
-    });
-
-    document.getElementById("saveNoteBtn").addEventListener("click", () => {
-      state.notes[currentDay] = document.getElementById("ideaInbox").value;
-      saveState();
-      document.getElementById("saveNoteBtn").textContent = "Saved ✓";
-      setTimeout(() => {
-        document.getElementById("saveNoteBtn").textContent = "Save note";
-      }, 1200);
-    });
-
-    document.getElementById("clearNoteBtn").addEventListener("click", () => {
-      document.getElementById("ideaInbox").value = "";
-    });
-
-    document.getElementById("resetDayBtn").addEventListener("click", () => {
-      state.days[currentDay] = { wake: false, run: false, sleep: false };
-      saveState();
-      renderHabits();
-    });
-
-    document.getElementById("exportBtn").addEventListener("click", () => {
-      const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `july-journey-tracker-${todayKey()}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
-    });
-
-    document.querySelectorAll(".tab").forEach((tab) => {
-      tab.addEventListener("click", () => {
-        document.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));
-        document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
-        tab.classList.add("active");
-        document.getElementById(`panel-${tab.dataset.tab}`).classList.add("active");
-      });
-    });
-
-    // Seed a return-home status note once, without overwriting user content.
-    if (!state.metaSeeded) {
+    function seedIfNeeded() {
+      if (state.metaSeeded) return;
       const seedDay = todayKey();
       if (!state.notes[seedDay]) {
         state.notes[seedDay] = [
@@ -861,11 +885,182 @@
         ].join("\n");
       }
       state.metaSeeded = true;
-      saveState();
     }
 
-    renderHabits();
-    renderChecks();
+    document.querySelectorAll("[data-habit]").forEach((input) => {
+      input.addEventListener("change", async () => {
+        const day = ensureDay(currentDay);
+        day[input.getAttribute("data-habit")] = input.checked;
+        await saveState();
+        renderHabits();
+      });
+    });
+
+    document.querySelectorAll("[data-check]").forEach((input) => {
+      input.addEventListener("change", async () => {
+        state.checks[input.getAttribute("data-check")] = input.checked;
+        await saveState();
+        renderChecks();
+      });
+    });
+
+    document.getElementById("prevDay").addEventListener("click", async () => {
+      currentDay = shiftDay(currentDay, -1);
+      await saveState();
+      renderHabits();
+    });
+
+    document.getElementById("nextDay").addEventListener("click", async () => {
+      currentDay = shiftDay(currentDay, 1);
+      await saveState();
+      renderHabits();
+    });
+
+    document.getElementById("todayBtn").addEventListener("click", async () => {
+      currentDay = todayKey();
+      await saveState();
+      renderHabits();
+    });
+
+    document.getElementById("noteDate").addEventListener("change", async (e) => {
+      currentDay = e.target.value || todayKey();
+      await saveState();
+      renderHabits();
+    });
+
+    document.getElementById("saveNoteBtn").addEventListener("click", async () => {
+      state.notes[currentDay] = document.getElementById("ideaInbox").value;
+      await saveState();
+      syncMode = syncMode === "connected" ? "connected" : "shared-ready";
+      document.getElementById("saveNoteBtn").textContent = "Saved ✓";
+      setTimeout(() => {
+        document.getElementById("saveNoteBtn").textContent = "Save note";
+      }, 1200);
+    });
+
+    document.getElementById("clearNoteBtn").addEventListener("click", () => {
+      document.getElementById("ideaInbox").value = "";
+    });
+
+    document.getElementById("resetDayBtn").addEventListener("click", async () => {
+      state.days[currentDay] = { wake: false, run: false, sleep: false };
+      await saveState();
+      renderHabits();
+    });
+
+    document.getElementById("saveSharedBtn").addEventListener("click", async () => {
+      state.notes[currentDay] = document.getElementById("ideaInbox").value;
+      await saveState();
+      if (fileHandle) {
+        try {
+          await writeConnectedFile();
+          setSyncStatus(`Sync status: wrote connected data.json · ${state.updatedAt}`);
+          return;
+        } catch (_) {
+          // fall through to download
+        }
+      }
+      downloadDataJson();
+      syncMode = "shared-ready";
+      setSyncStatus(
+        `Sync status: downloaded data.json · move/replace it into your synced july-journey-tracker folder · ${state.updatedAt}`
+      );
+    });
+
+    document.getElementById("loadSharedBtn").addEventListener("click", () => {
+      document.getElementById("importFile").click();
+    });
+
+    document.getElementById("importFile").addEventListener("change", async (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      try {
+        const text = await file.text();
+        applyState(JSON.parse(text), file.name);
+        syncMode = "shared-ready";
+        seedIfNeeded();
+        await saveState();
+      } catch (err) {
+        setSyncStatus(`Sync status: failed to load file (${err.message})`);
+      }
+      e.target.value = "";
+    });
+
+    document.getElementById("connectFileBtn").addEventListener("click", async () => {
+      if (!window.showOpenFilePicker) {
+        setSyncStatus(
+          "Sync status: auto-save connect needs Chrome/Edge. On Safari, use Load + Save Shared Data instead."
+        );
+        return;
+      }
+      try {
+        const handles = await window.showOpenFilePicker({
+          multiple: false,
+          types: [{ description: "Journey data", accept: { "application/json": [".json"] } }]
+        });
+        fileHandle = handles[0];
+        const file = await fileHandle.getFile();
+        const text = await file.text();
+        if (text.trim()) {
+          applyState(JSON.parse(text), "connected data.json");
+        }
+        syncMode = "connected";
+        seedIfNeeded();
+        await saveState();
+        setSyncStatus("Sync status: connected to data.json · edits auto-save into that file");
+      } catch (err) {
+        if (err && err.name === "AbortError") return;
+        setSyncStatus(`Sync status: could not connect (${err.message})`);
+      }
+    });
+
+    document.querySelectorAll(".tab").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));
+        document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
+        tab.classList.add("active");
+        document.getElementById(`panel-${tab.dataset.tab}`).classList.add("active");
+      });
+    });
+
+    async function boot() {
+      const local = readLocalCache();
+      let shared = null;
+      try {
+        const res = await fetch("./data.json", { cache: "no-store" });
+        if (res.ok) shared = normalizeState(await res.json());
+      } catch (_) {
+        // file:// or missing data.json is fine
+      }
+
+      if (shared && shared.updatedAt && (!local.updatedAt || shared.updatedAt > local.updatedAt)) {
+        state = shared;
+        syncMode = "shared-ready";
+        setSyncStatus(`Sync status: loaded newer shared data.json · ${shared.updatedAt}`);
+      } else if (local.updatedAt || local.metaSeeded || Object.keys(local.notes).length) {
+        state = local;
+        setSyncStatus(
+          local.updatedAt
+            ? `Sync status: loaded this browser cache · ${local.updatedAt}`
+            : "Sync status: local browser cache only"
+        );
+      } else if (shared) {
+        state = shared;
+        syncMode = "shared-ready";
+        setSyncStatus("Sync status: loaded shared data.json");
+      } else {
+        state = emptyState();
+        setSyncStatus("Sync status: starting fresh · use Save Shared Data to sync across computers");
+      }
+
+      currentDay = state.selectedDay || todayKey();
+      seedIfNeeded();
+      await saveState();
+      renderHabits();
+      renderChecks();
+    }
+
+    boot();
   </script>
 </body>
 </html>
