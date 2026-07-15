@@ -1,45 +1,59 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="740" height="409" viewBox="0 0 740 409">
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="370" viewBox="0 0 760 370">
 <rect width="100%" height="100%" fill="white"/>
-<style>text{font-family:Arial,Helvetica,sans-serif;fill:#000}.b{font-size:14px;font-weight:700}.h{font-size:12px;font-weight:700}.t{font-size:11px}.s{font-size:10px;fill:#333}line{stroke:#000;stroke-linecap:square;fill:none}.thin{stroke-width:1.15}.med{stroke-width:1.55}.dash{stroke-dasharray:4 3}</style>
-<text x="15.0" y="30.0" class="b">A</text>
-<text x="42.0" y="46.0" class="b">PGC induction:</text>
-<text x="140.0" y="16.0" class="t" text-anchor="middle">2d FA</text>
-<line class="thin" x1="140.0" y1="20.0" x2="140.0" y2="35.0"/>
-<polygon points="140.0,42.0 135.5,34.0 144.5,34.0" fill="#000"/>
-<line class="med" x1="70.0" y1="135.0" x2="685.0" y2="135.0"/>
-<line class="thin" x1="70.0" y1="127.0" x2="70.0" y2="143.0"/>
-<line class="thin" x1="155.0" y1="127.0" x2="155.0" y2="143.0"/>
-<line class="thin" x1="70.0" y1="149.0" x2="70.0" y2="159.0"/>
-<line class="thin" x1="70.0" y1="159.0" x2="155.0" y2="159.0"/>
-<line class="thin" x1="155.0" y1="149.0" x2="155.0" y2="159.0"/>
-<text x="112.5" y="175.0" class="t" text-anchor="middle">(CA)</text>
-<circle cx="225.0" cy="135.0" r="5.2" fill="#000"/>
-<text x="225.0" y="119.0" class="h" text-anchor="middle">BMP</text>
-<line class="thin" x1="295.0" y1="124.0" x2="295.0" y2="146.0"/>
-<text x="295.0" y="161.0" class="t" text-anchor="middle">2S</text>
-<text x="490.00000000000006" y="117.0" class="h" text-anchor="middle">BMP + SCF + EGF</text>
-<circle cx="355.0" cy="135.0" r="5.2" fill="#000"/>
-<circle cx="445.0" cy="135.0" r="5.2" fill="#000"/>
-<circle cx="535.0" cy="135.0" r="5.2" fill="#000"/>
-<circle cx="625.0" cy="135.0" r="5.2" fill="#000"/>
-<line class="thin dash" x1="355.0" y1="142.2" x2="355.0" y2="220.00000000000003"/>
-<line class="med" x1="355.0" y1="220.00000000000003" x2="425.0" y2="220.00000000000003"/>
-<line class="med" x1="350.75" y1="215.75000000000003" x2="359.25" y2="224.25000000000003"/>
-<line class="med" x1="350.75" y1="224.25000000000003" x2="359.25" y2="215.75000000000003"/>
-<circle cx="425.0" cy="220.00000000000003" r="5.2" fill="#000"/>
-<line class="thin dash" x1="445.0" y1="142.2" x2="445.0" y2="285.0"/>
-<line class="med" x1="445.0" y1="285.0" x2="515.0" y2="285.0"/>
-<line class="med" x1="440.75" y1="280.75" x2="449.25" y2="289.25"/>
-<line class="med" x1="440.75" y1="289.25" x2="449.25" y2="280.75"/>
-<circle cx="515.0" cy="285.0" r="5.2" fill="#000"/>
-<line class="thin dash" x1="535.0" y1="142.2" x2="535.0" y2="345.0"/>
-<line class="med" x1="535.0" y1="345.0" x2="605.0" y2="345.0"/>
-<line class="med" x1="530.75" y1="340.75" x2="539.25" y2="349.25"/>
-<line class="med" x1="530.75" y1="349.25" x2="539.25" y2="340.75"/>
-<circle cx="605.0" cy="345.0" r="5.2" fill="#000"/>
-<line class="med" x1="51.00000000000001" y1="366.0" x2="59.00000000000001" y2="374.0"/>
-<line class="med" x1="51.00000000000001" y1="374.0" x2="59.00000000000001" y2="366.0"/>
-<text x="67.0" y="374.0" class="s">Ecto (SB + LDN)  ·  Meso  ·  Endo</text>
-<circle cx="55.00000000000001" cy="394.0" r="4.2" fill="#000"/>
-<text x="67.0" y="398.0" class="s">fix &amp; stain</text>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#000}.b{font-size:13px;font-weight:700}.h{font-size:11px;font-weight:700}.t{font-size:10px}.s{font-size:8.5px;fill:#333}.d{font-size:8px}line{stroke:#000;stroke-linecap:square;fill:none}.thin{stroke-width:1.1}.med{stroke-width:1.45}.dash{stroke-dasharray:3.5 2.5}</style>
+<text x="10.0" y="20.0" class="b">A</text>
+<text x="34.0" y="20.0" class="h">Protocols for hPGCLC specification, maintenance and DE convergence.</text>
+<line class="med" x1="85.0" y1="75.0" x2="85.0" y2="115.0"/>
+<text x="85.0" y="67.0" class="t" text-anchor="middle" font-weight="700">hPSCs</text>
+<line class="med" x1="85.0" y1="95.0" x2="725.0" y2="95.0"/>
+<text x="170.33333333333331" y="71.0" class="t" text-anchor="middle" font-weight="700">CA</text>
+<line class="thin" x1="85.0" y1="85.0" x2="255.66666666666666" y2="85.0"/>
+<line class="thin" x1="85.0" y1="85.0" x2="85.0" y2="89.8"/>
+<line class="thin" x1="255.66666666666666" y1="85.0" x2="255.66666666666666" y2="89.8"/>
+<text x="490.3333333333333" y="71.0" class="h" text-anchor="middle">BMP + SCF + EGF</text>
+<circle cx="213.00000000000003" cy="95.0" r="4.2" fill="#000"/>
+<text x="213.00000000000003" y="115.0" class="d" text-anchor="middle">1.5d</text>
+<circle cx="298.3333333333333" cy="95.0" r="4.2" fill="#000"/>
+<text x="298.3333333333333" y="115.0" class="d" text-anchor="middle">2.5d</text>
+<circle cx="383.6666666666667" cy="95.0" r="4.2" fill="#000"/>
+<text x="383.6666666666667" y="115.0" class="d" text-anchor="middle">3.5d</text>
+<circle cx="468.99999999999994" cy="95.0" r="4.2" fill="#000"/>
+<text x="468.99999999999994" y="115.0" class="d" text-anchor="middle">4.5d</text>
+<circle cx="554.3333333333333" cy="95.0" r="4.2" fill="#000"/>
+<text x="554.3333333333333" y="115.0" class="d" text-anchor="middle">5.5d</text>
+<circle cx="639.6666666666666" cy="95.0" r="4.2" fill="#000"/>
+<text x="639.6666666666666" y="115.0" class="d" text-anchor="middle">6.5d</text>
+<circle cx="725.0" cy="95.0" r="4.2" fill="#000"/>
+<text x="725.0" y="115.0" class="d" text-anchor="middle">7.5d</text>
+<line class="thin dash" x1="213.00000000000003" y1="100.2" x2="213.00000000000003" y2="155.0"/>
+<line class="med" x1="213.00000000000003" y1="155.0" x2="383.6666666666667" y2="155.0"/>
+<line class="med" x1="209.50000000000003" y1="151.5" x2="216.50000000000003" y2="158.5"/>
+<line class="med" x1="209.50000000000003" y1="158.5" x2="216.50000000000003" y2="151.5"/>
+<circle cx="383.6666666666667" cy="155.0" r="4.2" fill="#000"/>
+<line class="thin dash" x1="298.3333333333333" y1="100.2" x2="298.3333333333333" y2="195.0"/>
+<line class="med" x1="298.3333333333333" y1="195.0" x2="468.99999999999994" y2="195.0"/>
+<line class="med" x1="294.8333333333333" y1="191.5" x2="301.8333333333333" y2="198.5"/>
+<line class="med" x1="294.8333333333333" y1="198.5" x2="301.8333333333333" y2="191.5"/>
+<circle cx="468.99999999999994" cy="195.0" r="4.2" fill="#000"/>
+<line class="thin dash" x1="383.6666666666667" y1="100.2" x2="383.6666666666667" y2="235.0"/>
+<line class="med" x1="383.6666666666667" y1="235.0" x2="554.3333333333333" y2="235.0"/>
+<line class="med" x1="380.1666666666667" y1="231.5" x2="387.1666666666667" y2="238.5"/>
+<line class="med" x1="380.1666666666667" y1="238.5" x2="387.1666666666667" y2="231.5"/>
+<circle cx="554.3333333333333" cy="235.0" r="4.2" fill="#000"/>
+<line class="thin dash" x1="468.99999999999994" y1="100.2" x2="468.99999999999994" y2="275.0"/>
+<line class="med" x1="468.99999999999994" y1="275.0" x2="639.6666666666666" y2="275.0"/>
+<line class="med" x1="465.49999999999994" y1="271.5" x2="472.49999999999994" y2="278.5"/>
+<line class="med" x1="465.49999999999994" y1="278.5" x2="472.49999999999994" y2="271.5"/>
+<circle cx="639.6666666666666" cy="275.0" r="4.2" fill="#000"/>
+<line class="thin dash" x1="554.3333333333333" y1="100.2" x2="554.3333333333333" y2="310.0"/>
+<line class="med" x1="554.3333333333333" y1="310.0" x2="725.0" y2="310.0"/>
+<line class="med" x1="550.8333333333333" y1="306.5" x2="557.8333333333333" y2="313.5"/>
+<line class="med" x1="550.8333333333333" y1="313.5" x2="557.8333333333333" y2="306.5"/>
+<circle cx="725.0" cy="310.0" r="4.2" fill="#000"/>
+<circle cx="22.0" cy="340.0" r="3.5" fill="#000"/>
+<text x="32.0" y="343.0" class="s">fix &amp; stain</text>
+<text x="150.0" y="343.0" class="s">CA  CHIR + Activin A</text>
+<line class="med" x1="316.0" y1="336.0" x2="324.0" y2="344.0"/>
+<line class="med" x1="316.0" y1="344.0" x2="324.0" y2="336.0"/>
+<text x="332.0" y="343.0" class="s">Ecto  d0–2 SB+LDN &nbsp;&nbsp; Meso  d1 CHIR+Activin A+FGF; d2 BMP+SB+FGF &nbsp;&nbsp; Endo  FGF+Activin A</text>
 </svg>
